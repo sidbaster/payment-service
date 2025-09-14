@@ -18,18 +18,18 @@ public class HttpServerUtil {
         }
     }
 
-    public static void readRequest(Socket socket) throws IOException {
+    public static void handleRequest(Socket socket) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        String requestLine = reader.readLine();
-        String path = requestLine.split(" ")[1];
+        String requestStartLine = reader.readLine();
+        String path = parseRequestLine(socket);
 
         File file = new File(FILE_PATH + path);
 
         if (file.exists() && !file.isDirectory()) {
             writeSuccessResponse(file, socket);
         } else {
-            writeErrorResponse();
+            writeErrorResponse(socket);
         }
     }
 
@@ -37,10 +37,11 @@ public class HttpServerUtil {
         byte[] content = Files.readAllBytes(file.toPath());
         String contentType = getContentType(file.getName());
 
-        String header = "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: " + contentType + " charset=utf-8\r\n" +
-                "Content-Length: " + content.length + "\r\n" +
-                "\r\n";
+        String header = """
+                HTTP/1.1 200 OK
+                Content-Type: %s charset=utf-8
+                Content-Length: %d
+                """.formatted(contentType,  content.length);
 
         socket.getOutputStream().write(header.getBytes());
         socket.getOutputStream().write(content);
@@ -48,13 +49,14 @@ public class HttpServerUtil {
         socket.getOutputStream().flush();
     }
 
-    private static void writeErrorResponse() throws IOException {
+    private static void writeErrorResponse(Socket socket) throws IOException {
         String header = """
                 HTTP/1.1 404 Not Found\r
                 Content-Type: text/plain\r
                 \r
                 File not found""";
         out.write(header.getBytes());
+        socket.getOutputStream().flush();
     }
 
     private static String getContentType(String fileName) {
@@ -65,5 +67,22 @@ public class HttpServerUtil {
         if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) return "image/jpeg";
         if (fileName.endsWith(".gif")) return "image/gif";
         return "application/octet-stream";
+    }
+
+    private static String parseRequestLine(Socket socket) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String requestStartLine = reader.readLine();
+
+        if (requestStartLine == null || requestStartLine.trim().isEmpty()) {
+            throw new IOException("Invalid request: empty or null start line");
+        }
+
+        String[] parts = requestStartLine.split(" ");
+
+        if (parts.length < 2) {
+            throw new IOException("Invalid request format: missing path");
+        }
+
+        return parts[1];
     }
 }
