@@ -11,10 +11,10 @@ import java.util.Map;
 @Service
 public class PaymentService {
 
-    private Map<Long, Payment> payments;
+    private static final Map<Long, Payment> payments;
 
-    public PaymentService() {
-        this.payments = new HashMap<>();
+    static {
+        payments = new HashMap<>();
         payments.put(1L, new Payment(1L,"ipko", 2345L));
         payments.put(2L, new Payment(2L,"bankuk", 7688L));
         payments.put(3L, new Payment(3L,"jpmorgan", 4545L));
@@ -23,10 +23,10 @@ public class PaymentService {
     }
 
     public Payment getPaymentById(String id) {
-        return  payments.get(Long.parseLong(id));
+        return payments.get(Long.parseLong(id));
     }
 
     public List<Payment> getPayments() {
-        return  new ArrayList<>(payments.values());
+        return new ArrayList<>(payments.values());
     }
 }
