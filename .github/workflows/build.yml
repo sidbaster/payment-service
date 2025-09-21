@@ -17,5 +17,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Compile with Maven
+        run: mvn compile
+      - name: Run Checkstyle
+        run: mvn checkstyle:check
       - name: Build Project with Maven
         run: mvn clean install
