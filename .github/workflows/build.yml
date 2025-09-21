@@ -18,6 +18,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Compile with Maven
-        run: mvn compile --fail-on-error
+        run: mvn compile
       - name: Build Project with Maven
-        run: mvn clean install --fail-on-error
+        run: mvn clean install
