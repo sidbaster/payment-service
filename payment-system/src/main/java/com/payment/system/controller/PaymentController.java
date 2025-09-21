@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/payments")
 public class PaymentController {
 
-    private final PaymentService paymentService;
+    private final PaymentService aymentService;
 
     @Autowired
     public PaymentController(PaymentService paymentService) {
