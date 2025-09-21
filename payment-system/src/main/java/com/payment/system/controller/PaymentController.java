@@ -27,8 +27,6 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getPaymentById(id));
     }
 
-    public static void fetregsdgkdsfjgdkflgjdfgkdfgjdfkglsdjfgklgjsdfglkjdfglksdfgjklfkglfhdsghdfjdfkgdfjhgsfshdfsdgfhjkasdfhgshdjakfgkhajsdhgfsdkjfgasdjfhgsdkjahfgkjasdhfgjaksdghjfgsdfjglkdsfjgklsdfjghdfjhghkjgjhldfsklgdfg(){}
-
     @GetMapping
     public ResponseEntity<List<Payment>> getPayments() {
         return  ResponseEntity.ok(paymentService.getPayments());
