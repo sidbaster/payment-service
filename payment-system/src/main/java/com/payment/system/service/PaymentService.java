@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PaymentService {
+public final class PaymentService {
+
+    private PaymentService() {}
 
     private static final Map<Long, Payment> payments;
 
@@ -22,11 +24,11 @@ public class PaymentService {
         payments.put(5L, new Payment(5L,"paysend", 9876L));
     }
 
-    public Payment getPaymentById(String id) {
+    public static Payment getPaymentById(String id) {
         return payments.get(Long.parseLong(id));
     }
 
-    public List<Payment> getPayments() {
+    public static List<Payment> getPayments() {
         return new ArrayList<>(payments.values());
     }
 }
