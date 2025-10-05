@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -29,10 +30,9 @@ public class PaymentController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Payment> getPayment(@PathVariable String id) {
-        if (paymentRepository.findById(UUID.fromString(id)).isPresent())
-            return ResponseEntity.ok(paymentRepository.findById(UUID.fromString(id)).get());
-        else
-            return ResponseEntity.notFound().build();
+        Optional<Payment> payment = paymentRepository.findById(UUID.fromString(id));
+
+        return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
