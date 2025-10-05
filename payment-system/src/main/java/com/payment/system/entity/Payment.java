@@ -19,8 +19,7 @@ import java.util.UUID;
 public class Payment  {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",  nullable = false)
+    @Column(columnDefinition = "uuid default gen_random_uuid()", name = "id")
     private UUID guid;
 
     @Column(name = "currency" , nullable = false)
